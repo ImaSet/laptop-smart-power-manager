@@ -17,7 +17,7 @@ STATE_CHANGE_TIMEOUT = 10
 
 # Percentage value equivalent to the low battery state.
 # Defaults to 20% (it should not be less than 7% which is the default critical battery level)
-BATTERY_LOW = 25
+BATTERY_LOW = 20
 
 # Percentage value equivalent to the charged battery state.
 # Defaults to 100%
