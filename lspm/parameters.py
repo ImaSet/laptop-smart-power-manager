@@ -8,8 +8,8 @@ This module contains the main parameters that control how the Laptop Smart Power
 """
 
 # Time interval (in seconds) between each battery status check.
-# Defaults to 60 seconds
-REFRESH_TIME = 10
+# Defaults to 30 seconds
+REFRESH_TIME = 30
 
 # Maximum time to wait (in seconds) for the Smart Plug state change action to take effect.
 # Defaults to 10 seconds
