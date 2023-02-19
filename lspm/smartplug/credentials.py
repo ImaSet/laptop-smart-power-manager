@@ -50,9 +50,7 @@ class PlugCredentials:
     @username.setter
     def username(self, value: str) -> None:
         """
-        TODO 2 cas :
-         1) pas d'identifiants enregistrés donc on créé le username
-         2) Identifiants déja enregistrés donc on récupère la valeur du mot de passe, si mot de passe existant on supprime le mot de passe accocié à l'ancien username, on met à jour le username, et enfin on le réaffecte le mot de passe au nouveau username
+        Sets or updates the username associated to the Smart Plug.
 
         :param str value: username to set.
 

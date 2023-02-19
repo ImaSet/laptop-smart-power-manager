@@ -18,8 +18,6 @@ import warnings
 from time import sleep
 from pathlib import Path
 
-
-sys.path.append(r'D:\Documents\Projets\SmartPowerManager')  # TODO remove
 from lspm import LaptopSmartPowerManager, PlugCredentials, TapoP100
 from lspm.exceptions import CredentialsError
 
@@ -28,7 +26,7 @@ from lspm.exceptions import CredentialsError
 
 def lspm_command() -> None:
     """
-    Command-line biding to ``lspm`` package main features.
+    Command-line binding to ``lspm`` package main features.
 
     TODO sub command 'discover' to discover if any smart plug is available in the LAN ?
      (see https://github.com/python-kasa/python-kasa)
@@ -73,7 +71,10 @@ def __is_ip_address(string: str) -> bool:
 
 def __get_smart_plug_config_data() -> dict:
     """
-    TODO
+    Retrieves the configuration parameters of the Connected Socket.
+
+    Some of these settings are saved in the 'smart_plug' file located at $HOME$/.lspm/
+    If this file and/or the '.lspm' directory do not exist, they are then created.
 
     :return: Dictionary containing only Smart Plug parameters available
              and correctly stored on the current machine.
@@ -94,8 +95,6 @@ def __get_smart_plug_config_data() -> dict:
     # Set Smart Plug config parameters
     config_params = dict()
     config_params["address"] = config_data.get("address") if __is_ip_address(config_data.get("address")) else None
-    config_params["model"] = config_data.get("model")
-    # TODO check if model is the name of one of the available SmartPlug child classes
     warnings.simplefilter('ignore')
     account = PlugCredentials()
     config_params["username"] = account.username
@@ -106,7 +105,7 @@ def __get_smart_plug_config_data() -> dict:
 
 def _start() -> None:
     """
-    TODO
+    Starts the Laptop Smart Power Manager.
 
     :return: None
     """
@@ -116,10 +115,6 @@ def _start() -> None:
         print("Smart Plug IP Address not found. You must set it with "
               "the following command: lspm config -a ADDRESS")
         missing_config_data = True
-    # if not config.get("model"):
-    #     print("Smart Plug IP Model not found. You must set it with "
-    #           "the following command: lspm config -m MODEL")
-    #     missing_config_data = True  # TODO get Smart Plug child class name from config file
     if not config.get("username"):
         print("Smart Plug IP associated username not found. You must set it with "
               "the following command: lspm config -u USERNAME")
@@ -153,13 +148,16 @@ def _start() -> None:
 
 def _configure_smart_plug(args: argparse.Namespace) -> None:
     """
-    TODO
+    Saves settings for connecting to the Smart Plug.
 
-    :param argparse.Namespace args:
+    Sensitive settings such as credentials are securely stored on the system.
+    Other parameters such as the IP address of the Smart Plug are saved
+    in a file located at $HOME$/.lspm/smart_plug
+
+    :param argparse.Namespace args: object holding attributes entered by the user.
 
     :return: None
     """
-    warnings.simplefilter('ignore')
     account = PlugCredentials()
     address, username, password = args.address, args.username, args.password
     config = __get_smart_plug_config_data()
@@ -183,7 +181,6 @@ def _configure_smart_plug(args: argparse.Namespace) -> None:
                 else:
                     print("Invalid IPv4 address, operation aborted.")
                     return
-            # TODO Enter the Smart Plug model [TapoP100/Other]:
             username = input("Enter a new username: ")
             password = input("Enter a new password: ")
         except KeyboardInterrupt:
@@ -214,6 +211,7 @@ def _configure_smart_plug(args: argparse.Namespace) -> None:
             f.seek(0)
             json.dump(config_data, f)
             f.truncate()
+    warnings.simplefilter('ignore')
     if username is not None:
         account.username = username
     if password is not None:
@@ -223,14 +221,8 @@ def _configure_smart_plug(args: argparse.Namespace) -> None:
 
 def _compile() -> None:
     """
-    TODO
+    Generates an executable of the Laptop Smart Power Manager.
 
     :return: None
     """
-    print("Compile!")
-
-
-# ----------------------------------------- MAIN ------------------------------------------
-
-if __name__ == '__main__':
-    lspm_command()
+    print("Work in progress...")  # TODO
