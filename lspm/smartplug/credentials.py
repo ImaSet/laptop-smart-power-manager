@@ -28,7 +28,7 @@ class PlugCredentials:
     """
 
     def __init__(self):
-        self.__app_id = "SmartPowerManager"
+        self.__app_id = "LaptopSmartPowerManager"
         self.__app_key = "PlugCredentials"
 
     def __str__(self):
