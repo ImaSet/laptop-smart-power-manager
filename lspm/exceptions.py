@@ -23,17 +23,6 @@ class LSPMException(Exception):
         return self.error_msg
 
 
-class UnsupportedSystemError(LSPMException):
-    """
-    The :class:`UnsupportedSystemError` is raised when the Laptop Smart Power Manager is running on
-    a system other than Windows, Linux or macOS.
-    """
-
-    def __init__(self, system_name: str):
-        self.error_msg = f"'{system_name}' system is not supported. " \
-                         f"Only Windows, Linux, and macOS are currently supported"
-
-
 class CredentialsError(LSPMException):
     """
     The :class:`CredentialsError` is raised when there is any error related to
@@ -67,3 +56,29 @@ class SmartPlugInteractionError(LSPMException):
 
     def __init__(self, action: str):
         self.error_msg = f"Unable to turn {action} the Smart Plug"
+
+
+class PowerSupplyStatusCheckError(LSPMException):
+    """
+    The :class:`PowerSupplyStatusCheckError` is raised when there is any error related to
+    the retrieval of information about the power supply status of the computer.
+    """
+
+    error_types = {
+        "ac_power_cable": "Unable to know if the AC power cable is connected",
+        "battery_state": "Unable to get information about battery state"
+    }
+
+    def __init__(self, error_type: str):
+        self.error_msg = self.error_types.get(error_type)
+
+
+class UnsupportedSystemError(LSPMException):
+    """
+    The :class:`UnsupportedSystemError` is raised when the Laptop Smart Power Manager is running on
+    a system other than Windows, Linux or macOS.
+    """
+
+    def __init__(self, system_name: str):
+        self.error_msg = f"'{system_name}' system is not supported. " \
+                         f"Only Windows, Linux, and macOS are currently supported"

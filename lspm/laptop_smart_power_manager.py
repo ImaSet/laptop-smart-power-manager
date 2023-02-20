@@ -18,7 +18,7 @@ from psutil import sensors_battery
 
 from lspm.smartplug import SmartPlug
 from lspm.parameters import REFRESH_TIME, STATE_CHANGE_TIMEOUT, BATTERY_LOW, BATTERY_HIGH
-from lspm.exceptions import SmartPlugConnectionError, SmartPlugInteractionError
+from lspm.exceptions import SmartPlugConnectionError, SmartPlugInteractionError, PowerSupplyStatusCheckError
 from lspm.interrupt_event_handler import set_interrupt_event_handler
 
 
@@ -123,11 +123,11 @@ class LaptopSmartPowerManager(Thread):
         battery = sensors_battery()
         if battery is not None:
             if battery.power_plugged is None:
-                raise SystemError("Unable to know if the AC power cable is connected")
+                raise PowerSupplyStatusCheckError("ac_power_cable")
             else:
                 return battery.percent, battery.power_plugged
         else:
-            raise SystemError("Unable to get information about battery state")
+            raise PowerSupplyStatusCheckError("battery_state")
 
     def __manage_power_supply(self) -> None:
         """
