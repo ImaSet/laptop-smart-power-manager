@@ -140,7 +140,7 @@ class LaptopSmartPowerManager(Thread):
         if not power_plugged and percent < BATTERY_LOW:
             self.__smart_plug.turn_on()
             self.__check_smart_plug_state("on")
-        elif power_plugged and percent == BATTERY_HIGH:
+        elif power_plugged and percent >= BATTERY_HIGH:
             self.__smart_plug.turn_off()
             self.__check_smart_plug_state("off")
 
