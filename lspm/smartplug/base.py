@@ -36,7 +36,7 @@ class SmartPlug(ABC):
             raise SmartPlugConnectionError(f"Failed to connect to the Smart Plug - "
                                            f"{self._address} is unreachable") from None
 
-    def __str__(self):
+    def __str__(self) -> str:
         return f"<SmartPlug - IP Address: {self._address}>"
 
     """

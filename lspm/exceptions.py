@@ -16,10 +16,10 @@ class LSPMException(Exception):
     specific to the ``lspm`` package.
     """
 
-    def __init__(self):
+    def __init__(self) -> None:
         self.error_msg = "LaptopSmartPowerManager Exception"
 
-    def __str__(self):
+    def __str__(self) -> str:
         return self.error_msg
 
 
@@ -35,7 +35,7 @@ class CredentialsError(LSPMException):
         "password_set_prematurely": "The username must be set before the password"
     }
 
-    def __init__(self, error_type: str):
+    def __init__(self, error_type: str) -> None:
         self.error_msg = self.error_types.get(error_type)
 
 
@@ -44,7 +44,7 @@ class SmartPlugConnectionError(LSPMException):
     The :class:`SmartPlugConnectionError` is raised when the Smart Plug is not reachable.
     """
 
-    def __init__(self, error_msg: str):
+    def __init__(self, error_msg: str) -> None:
         self.error_msg = error_msg
 
 
@@ -54,7 +54,7 @@ class SmartPlugInteractionError(LSPMException):
     the Smart Plug has been lost.
     """
 
-    def __init__(self, action: str):
+    def __init__(self, action: str) -> None:
         self.error_msg = f"Unable to turn {action} the Smart Plug"
 
 
@@ -69,7 +69,7 @@ class PowerSupplyStatusCheckError(LSPMException):
         "battery_state": "Unable to get information about battery state"
     }
 
-    def __init__(self, error_type: str):
+    def __init__(self, error_type: str) -> None:
         self.error_msg = self.error_types.get(error_type)
 
 
@@ -79,6 +79,6 @@ class UnsupportedSystemError(LSPMException):
     a system other than Windows, Linux or macOS.
     """
 
-    def __init__(self, system_name: str):
+    def __init__(self, system_name: str) -> None:
         self.error_msg = f"'{system_name}' system is not supported. " \
                          f"Only Windows, Linux, and macOS are currently supported"

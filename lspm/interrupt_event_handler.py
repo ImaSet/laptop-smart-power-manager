@@ -61,7 +61,7 @@ class InterruptEventHandler(ABC):
     :param Any kwargs: keyword arguments of ``exit_function``.
     """
 
-    def __init__(self, exit_function: Callable, args: Any = None, kwargs: Any = None):
+    def __init__(self, exit_function: Callable, args: Any = None, kwargs: Any = None) -> None:
         self._exit_function = exit_function
         self._args = args if args is not None else []
         self._kwargs = kwargs if kwargs is not None else {}

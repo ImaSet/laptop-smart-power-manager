@@ -27,11 +27,11 @@ class PlugCredentials:
     securely stored in the computer.
     """
 
-    def __init__(self):
+    def __init__(self) -> None:
         self.__app_id = "LaptopSmartPowerManager"
         self.__app_key = "PlugCredentials"
 
-    def __str__(self):
+    def __str__(self) -> str:
         return "<PlugCredentials>"
 
     @property

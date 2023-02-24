@@ -36,7 +36,7 @@ class LaptopSmartPowerManager(Thread):
            thread to terminate silently.
     """
 
-    def __init__(self, smart_plug: SmartPlug, handle_exceptions_in_main_thread: bool = False):
+    def __init__(self, smart_plug: SmartPlug, handle_exceptions_in_main_thread: bool = False) -> None:
         Thread.__init__(self)
         self.exception = None
         self.__handle_exceptions_in_main_thread = handle_exceptions_in_main_thread
