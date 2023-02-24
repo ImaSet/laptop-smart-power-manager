@@ -1,10 +1,10 @@
 # -*- coding: utf-8 -*-
 
 """
-Tapo P100
+Tapo Plug
 *********
 
-This module includes the class dedicated to the interaction with a 'Tapo P100' Smart Plug.
+This module includes the class dedicated to the interaction with TP-Link 'Tapo' Smart Plugs.
 """
 
 # ---------------------------------------- IMPORTS ----------------------------------------
@@ -17,10 +17,10 @@ from .base import SmartPlug
 # ----------------------------------------- CLASS -----------------------------------------
 
 
-class TapoP100(SmartPlug):
+class TapoPlug(SmartPlug):
     """
-    The :class:`TapoP100` contains a set of methods allowing to interact
-    with a 'Tapo P100' Smart Plug.
+    The :class:`TapoPlug` contains a set of methods allowing to interact
+    with TP-Link 'Tapo' Smart Plugs.
     """
 
     """

@@ -18,7 +18,7 @@ import warnings
 from time import sleep
 from pathlib import Path
 
-from lspm import LaptopSmartPowerManager, PlugCredentials, TapoP100
+from lspm import LaptopSmartPowerManager, PlugCredentials, TapoPlug
 from lspm.exceptions import CredentialsError
 
 
@@ -128,7 +128,8 @@ def _start() -> None:
     # Get Smart Plug credentials
     account = PlugCredentials()
     # Connect to Smart Plug
-    smart_plug = TapoP100(config["address"], account)
+    smart_plug = TapoPlug(config["address"], account)
+
     # Initialize the Laptop Smart Power Manager
     laptop_smart_power_manager = LaptopSmartPowerManager(smart_plug, handle_exceptions_in_main_thread=True)
     # Start the Laptop Smart Power Manager
