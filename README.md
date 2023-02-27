@@ -8,6 +8,8 @@ charge cycles with the help of a Smart Plug.
 
 TODO
 
+![Diagram of LSPM](./docs/static/lspm_schema.png)
+
 ## Table of Contents
 
 - [Installation](#installation)
