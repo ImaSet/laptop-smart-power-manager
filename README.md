@@ -27,8 +27,10 @@ a _Smart Plug_.<br />
 The laptop must be plugged into the _Smart Plug_ and both 
 must be connected to the same local network:
 
-![Diagram of LSPM](./docs/static/lspm_schema_dark.png#gh-dark-mode-only)
-![Diagram of LSPM](./docs/static/lspm_schema_light.png#gh-light-mode-only)
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/ImaSet/laptop-smart-power-manager/master/docs/static/lspm_schema_dark.png">
+  <img alt="Diagram of LSPM" src="https://raw.githubusercontent.com/ImaSet/laptop-smart-power-manager/master/docs/static/lspm_schema_light.png">
+</picture>
 
 The operating principle is quite simple:
 
@@ -46,7 +48,7 @@ _Smart Plug_ to turn off. The laptop then stops charging.
 - [Contributing](#contributing)
 - [License](#license)
 
-## Installation
+## Installation<a id="installation"></a>
 
 `lspm` can be installed using the package manager 
 [pip](https://pip.pypa.io/en/stable/).
@@ -55,7 +57,7 @@ _Smart Plug_ to turn off. The laptop then stops charging.
 pip install lspm
 ```
 
-## Configuration
+## Configuration<a id="configuration"></a>
 
 ### Prerequisites
 
@@ -87,7 +89,7 @@ Enter a new password:
 To get the available options for this command, 
 run `lspm config --help`.
 
-## Usage
+## Usage<a id="usage"></a>
 
 ### Command Line Interface
 
@@ -109,7 +111,7 @@ should show up:
 Laptop Smart Power Manager stopped successfully
 ```
 
-## Supported devices
+## Supported devices<a id="supported-devices"></a>
 
 ### TP-Link
 
@@ -118,12 +120,12 @@ Laptop Smart Power Manager stopped successfully
   - P105 (not tested)
   - P110 (not tested)
 
-## Contributing
+## Contributing<a id="contributing"></a>
 
 Contributions, issues and feature requests are 
 always welcome!
 
-## License
+## License<a id="license"></a>
 
 Copyright © 2023 [Imanol Setoain](https://github.com/ImaSet).<br />
 This project is [MIT](https://choosealicense.com/licenses/mit/) licensed.
