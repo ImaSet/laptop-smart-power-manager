@@ -2,7 +2,7 @@
 
 The **Laptop Smart Power Manager** is a lightweight tool 
 designed to autonomously manage laptop battery 
-charge cycles with the help of a Smart Plug.
+charge cycles with the help of a _Smart Plug_.
 
 ## Description
 
@@ -33,9 +33,9 @@ must be connected to the same local network:
 The operating principle is quite simple:
 
 - if the battery level drops below 20%, **LSPM** tells the 
-Smart Plug to turn on. The laptop then starts charging.
+_Smart Plug_ to turn on. The laptop then starts charging.
 - if the battery level reaches 100%, **LSPM** tells the 
-Smart Plug to turn off. The laptop then stops charging.
+_Smart Plug_ to turn off. The laptop then stops charging.
 
 ## Table of Contents
 
@@ -59,12 +59,12 @@ pip install lspm
 
 ### Prerequisites
 
-Before using **LSPM**, your Smart Plug must be plugged in, 
+Before using **LSPM**, your _Smart Plug_ must be plugged in, 
 configured and connected to the same local network as 
 your laptop.
 
 To work properly, **LSPM** needs some information 
-about the Smart Plug:
+about the _Smart Plug_:
 
 - IP Address
 - Username
@@ -75,7 +75,7 @@ about the Smart Plug:
 The easiest way is to use the command line tool `lspm`.
 
 For the first use, enter the configuration parameters 
-of your Smart Plug using the command `lspm config`:
+of your _Smart Plug_ using the command `lspm config`:
 
 ```bash
 $> lspm config
