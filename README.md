@@ -12,7 +12,7 @@ The problem of this practice is that it will damage the
 laptop battery prematurely.<br />
 To extend the battery life, it is recommended to [unplug 
 the charger before the battery reaches 100% and plug it 
-in before the battery is completely discharged](
+in long before the battery is completely discharged](
 https://www.wired.com/2013/09/laptop-battery/?cid=12494134).
 However, constantly keeping an eye on your computer's 
 battery level turns out to be difficult in practice.
