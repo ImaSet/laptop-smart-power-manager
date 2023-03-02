@@ -17,6 +17,7 @@ import warnings
 
 from time import sleep
 from pathlib import Path
+from shutil import rmtree
 
 from lspm import LaptopSmartPowerManager, PlugCredentials, TapoPlug
 from lspm.exceptions import CredentialsError
@@ -188,8 +189,8 @@ def _configure_smart_plug(args: argparse.Namespace) -> None:
         except KeyboardInterrupt:
             print("\nOperation aborted.")
     elif args.clear:
-        smart_plug_config = Path(Path.home(), '.lspm', 'smart_plug')
-        smart_plug_config.unlink(missing_ok=True)
+        lspm_config_dir = Path(Path.home(), '.lspm')
+        rmtree(lspm_config_dir)
         try:
             warnings.simplefilter('ignore')
             del account.password
