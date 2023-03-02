@@ -33,16 +33,16 @@ def lspm_command() -> None:
 
     :return: None
     """
-    program_name = "lspm"
-    description = "Command Line Interface for LSPM, the Laptop Smart Power Manager."
-
-    global_parser = argparse.ArgumentParser(prog=program_name, description=description)
+    global_parser = argparse.ArgumentParser(prog="lspm", description="Command Line Interface for LSPM, the "
+                                                                     "Laptop Smart Power Manager.")
     subparsers = global_parser.add_subparsers(title="Actions", metavar="<action>")
 
-    start_parser = subparsers.add_parser("start", help="Start the Laptop Smart Power Manager.")
+    start_info = "Start the Laptop Smart Power Manager."
+    start_parser = subparsers.add_parser("start", help=start_info, description=start_info)
     start_parser.set_defaults(action=_start)
 
-    config_parser = subparsers.add_parser("config", help="Launch the Smart Plug configuration interface.")
+    config_info = "Launch the Smart Plug configuration interface."
+    config_parser = subparsers.add_parser("config", help=config_info, description=config_info)
     config_parser.add_argument("-a", "--address", help="Set or update the Smart Plug IP address.")
     config_parser.add_argument("-u", "--username", help="Set or update the username associated to the Smart Plug.")
     config_parser.add_argument("-p", "--password", help="Set or update the password associated to the Smart Plug.")
@@ -50,7 +50,8 @@ def lspm_command() -> None:
                                default=None)
     config_parser.set_defaults(action=_configure_smart_plug)
 
-    compile_parser = subparsers.add_parser("compile", help="Create an executable version of LSPM.")
+    compile_info = "Create an executable version of LSPM."
+    compile_parser = subparsers.add_parser("compile", help=compile_info, description=compile_info)
     compile_parser.set_defaults(action=_compile)
 
     args = global_parser.parse_args(args=None if sys.argv[1:] else ['-h'])
