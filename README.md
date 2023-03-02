@@ -24,13 +24,15 @@ life.
 
 To achieve this, **LSPM** needs an additional accessory: 
 a _Smart Plug_.<br />
-The laptop must be plugged into the _Smart Plug_ and both 
+The laptop must be plugged in to the _Smart Plug_ and both 
 must be connected to the same local network:
 
-<picture>
-  <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/ImaSet/laptop-smart-power-manager/master/docs/static/lspm_schema_dark.png">
-  <img alt="Diagram of LSPM" src="https://raw.githubusercontent.com/ImaSet/laptop-smart-power-manager/master/docs/static/lspm_schema_light.png">
-</picture>
+<p align="center">
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/ImaSet/laptop-smart-power-manager/master/docs/static/lspm_schema_dark.png">
+    <img alt="Diagram of LSPM" src="https://raw.githubusercontent.com/ImaSet/laptop-smart-power-manager/master/docs/static/lspm_schema_light.png">
+  </picture>
+</p>
 
 The operating principle is quite simple:
 
