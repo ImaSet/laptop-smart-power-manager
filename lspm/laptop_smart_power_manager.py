@@ -10,6 +10,10 @@ the computer and manage its power supply.
 
 # ---------------------------------------- IMPORTS ----------------------------------------
 
+import logging
+import logging.handlers
+
+from pathlib import Path
 from typing import Tuple
 from threading import Thread, Event, Timer
 from time import sleep
@@ -38,6 +42,7 @@ class LaptopSmartPowerManager(Thread):
 
     def __init__(self, smart_plug: SmartPlug, handle_exceptions_in_main_thread: bool = False) -> None:
         Thread.__init__(self)
+        self.__set_logging()
         self.exception = None
         self.__handle_exceptions_in_main_thread = handle_exceptions_in_main_thread
         self.__finished = Event()
@@ -68,6 +73,25 @@ class LaptopSmartPowerManager(Thread):
     """
     PRIVATE METHODS
     """
+
+    def __set_logging(self, level: str = 'INFO') -> None:
+        """
+        TODO
+
+        :return: None
+        """
+        # Create Smart Plug config directory if it doesn't exist
+        lspm_config_dir = Path(Path.home(), '.lspm')
+        if not lspm_config_dir.exists():
+            lspm_config_dir.mkdir()
+        # Create LSPM logger
+        self.__logger = logging.getLogger('lspm')
+        formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+        handler = logging.handlers.RotatingFileHandler(Path(lspm_config_dir, 'app.log'),
+                                                       maxBytes=10000, backupCount=1)
+        handler.setLevel(level)
+        handler.setFormatter(formatter)
+        self.__logger.addHandler(handler)
 
     def __check_connection_to_smart_plug(self) -> None:
         """
@@ -136,13 +160,18 @@ class LaptopSmartPowerManager(Thread):
 
         :return: None
         """
-        percent, power_plugged = self.__get_battery_state()
-        if not power_plugged and percent < BATTERY_LOW:
+        battery_level, power_plugged = self.__get_battery_state()
+        self.__logger.debug(f"Battery level: {battery_level}% - Power plugged: {'Yes' if power_plugged else 'No'}")
+        if not power_plugged and battery_level < BATTERY_LOW:
             self.__smart_plug.turn_on()
+            self.__logger.debug("Sent turn-on request to the Smart Plug")
             self.__check_smart_plug_state("on")
-        elif power_plugged and percent >= BATTERY_HIGH:
+            self.__logger.info("Smart Plug turned ON successfully")
+        elif power_plugged and battery_level >= BATTERY_HIGH:
             self.__smart_plug.turn_off()
+            self.__logger.debug("Sent turn-off request to the Smart Plug")
             self.__check_smart_plug_state("off")
+            self.__logger.info("Smart Plug turned OFF successfully")
 
     """
     PUBLIC METHODS
@@ -155,6 +184,7 @@ class LaptopSmartPowerManager(Thread):
 
         :return: None
         """
+        self.__logger.info("Laptop Smart Power Manager started correctly")
         while True:
             self.__finished.wait(REFRESH_TIME)
             if not self.__finished.is_set():
@@ -175,6 +205,7 @@ class LaptopSmartPowerManager(Thread):
 
         :return: None
         """
+        self.__finished.set()
         if not self.__connection_lost:
             self.__smart_plug.turn_off()
-        self.__finished.set()
+            self.__logger.info("Laptop Smart Power Manager stopped successfully")
