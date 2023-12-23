@@ -11,9 +11,7 @@ the computer and manage its power supply.
 # ---------------------------------------- IMPORTS ----------------------------------------
 
 import logging
-import logging.handlers
 
-from pathlib import Path
 from typing import Tuple
 from threading import Thread, Event, Timer
 from time import sleep
@@ -24,6 +22,7 @@ from lspm.smartplug import SmartPlug
 from lspm.parameters import REFRESH_TIME, STATE_CHANGE_TIMEOUT, BATTERY_LOW, BATTERY_HIGH
 from lspm.exceptions import SmartPlugConnectionError, SmartPlugInteractionError, PowerSupplyStatusCheckError
 from lspm.interrupt_event_handler import set_interrupt_event_handler
+from lspm.logger import set_logging
 
 
 # ----------------------------------------- CLASS -----------------------------------------
@@ -42,7 +41,9 @@ class LaptopSmartPowerManager(Thread):
 
     def __init__(self, smart_plug: SmartPlug, handle_exceptions_in_main_thread: bool = False) -> None:
         Thread.__init__(self)
-        self.__set_logging()
+        set_logging()
+        self.__logger = logging.getLogger("lspm")
+        self.__logger.info("Initializing the Laptop Smart Power Manager")
         self.exception = None
         self.__handle_exceptions_in_main_thread = handle_exceptions_in_main_thread
         self.__finished = Event()
@@ -50,6 +51,7 @@ class LaptopSmartPowerManager(Thread):
         self.__smart_plug = smart_plug
         self.__check_connection_to_smart_plug()
         self.__smart_plug.turn_off()
+        self.__logger.debug("Sent turn-off request to the Smart Plug")
         self.__check_smart_plug_state("off")
         self.__manage_power_supply()
         self.__interrupt_event_handler = set_interrupt_event_handler(exit_function=self.stop)
@@ -73,25 +75,6 @@ class LaptopSmartPowerManager(Thread):
     """
     PRIVATE METHODS
     """
-
-    def __set_logging(self, level: str = 'INFO') -> None:
-        """
-        TODO
-
-        :return: None
-        """
-        # Create Smart Plug config directory if it doesn't exist
-        lspm_config_dir = Path(Path.home(), '.lspm')
-        if not lspm_config_dir.exists():
-            lspm_config_dir.mkdir()
-        # Create LSPM logger
-        self.__logger = logging.getLogger('lspm')
-        formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
-        handler = logging.handlers.RotatingFileHandler(Path(lspm_config_dir, 'app.log'),
-                                                       maxBytes=10000, backupCount=1)
-        handler.setLevel(level)
-        handler.setFormatter(formatter)
-        self.__logger.addHandler(handler)
 
     def __check_connection_to_smart_plug(self) -> None:
         """
@@ -135,6 +118,7 @@ class LaptopSmartPowerManager(Thread):
                 state_changed.set()
             sleep(.1)
         timeout.cancel()
+        self.__logger.info(f"Smart Plug status check: turned {state.upper()}")
 
     @staticmethod
     def __get_battery_state() -> Tuple[int, bool]:
@@ -166,12 +150,10 @@ class LaptopSmartPowerManager(Thread):
             self.__smart_plug.turn_on()
             self.__logger.debug("Sent turn-on request to the Smart Plug")
             self.__check_smart_plug_state("on")
-            self.__logger.info("Smart Plug turned ON successfully")
         elif power_plugged and battery_level >= BATTERY_HIGH:
             self.__smart_plug.turn_off()
             self.__logger.debug("Sent turn-off request to the Smart Plug")
             self.__check_smart_plug_state("off")
-            self.__logger.info("Smart Plug turned OFF successfully")
 
     """
     PUBLIC METHODS
@@ -192,6 +174,7 @@ class LaptopSmartPowerManager(Thread):
                     self.__check_connection_to_smart_plug()
                     self.__manage_power_supply()
                 except Exception as e:
+                    self.__logger.error(str(e))
                     if self.__handle_exceptions_in_main_thread:
                         self.exception = e
                     else:
