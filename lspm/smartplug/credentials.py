@@ -31,7 +31,7 @@ class PlugCredentials:
         self.__app_id = "LaptopSmartPowerManager"
         self.__app_key = "PlugCredentials"
 
-    def __str__(self) -> str:
+    def __repr__(self) -> str:
         return "<PlugCredentials>"
 
     @property
