@@ -10,19 +10,18 @@ the computer and manage its power supply.
 
 # ---------------------------------------- IMPORTS ----------------------------------------
 
-import logging
-
-from typing import Tuple
-from threading import Thread, Event, Timer
+from logging import getLogger
+from threading import Event, Thread, Timer
 from time import sleep
+from typing import Tuple
 
 from psutil import sensors_battery
 
-from lspm.smartplug import SmartPlug
-from lspm.parameters import REFRESH_TIME, STATE_CHANGE_TIMEOUT, BATTERY_LOW, BATTERY_HIGH
-from lspm.exceptions import SmartPlugConnectionError, SmartPlugInteractionError, PowerSupplyStatusCheckError
+from lspm.exceptions import PowerSupplyStatusCheckError, SmartPlugConnectionError, SmartPlugInteractionError
 from lspm.interrupt_event_handler import set_interrupt_event_handler
 from lspm.logger import set_logging
+from lspm.parameters import BATTERY_HIGH, BATTERY_LOW, REFRESH_TIME, STATE_CHANGE_TIMEOUT
+from lspm.smartplug import SmartPlug
 
 
 # ----------------------------------------- CLASS -----------------------------------------
@@ -42,7 +41,7 @@ class LaptopSmartPowerManager(Thread):
     def __init__(self, smart_plug: SmartPlug, handle_exceptions_in_main_thread: bool = False) -> None:
         Thread.__init__(self)
         set_logging()
-        self.__logger = logging.getLogger("lspm")
+        self.__logger = getLogger("lspm")
         self.__logger.info("Initializing the Laptop Smart Power Manager")
         self.exception = None
         self.__handle_exceptions_in_main_thread = handle_exceptions_in_main_thread

@@ -9,8 +9,8 @@ This module defines the root logger used in some modules of the package.
 
 # ---------------------------------------- IMPORTS ----------------------------------------
 
-import logging.handlers
-
+from logging import getLogger, Filter, Formatter
+from logging.handlers import RotatingFileHandler
 from pathlib import Path
 
 from lspm.parameters import LOGGING_LEVEL
@@ -18,7 +18,7 @@ from lspm.parameters import LOGGING_LEVEL
 
 # ---------------------------------------- CLASSES ----------------------------------------
 
-class LSPMLoggingFilter(logging.Filter):
+class LSPMLoggingFilter(Filter):
 
     def filter(self, record):
         return record.name == 'lspm'
@@ -39,13 +39,12 @@ def set_logging() -> None:
         lspm_config_dir.mkdir()
 
     # Prepare LSPM root logger
-    handler = logging.handlers.RotatingFileHandler(Path(lspm_config_dir, 'app.log'),
-                                                   maxBytes=10000, backupCount=1)
-    formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)8s - %(message)s')
+    handler = RotatingFileHandler(Path(lspm_config_dir, 'app.log'), maxBytes=10000, backupCount=1)
+    formatter = Formatter('%(asctime)s - %(name)s - %(levelname)8s - %(message)s')
     handler.setFormatter(formatter)
     handler.addFilter(LSPMLoggingFilter())
 
     # Create LSPM root logger
-    logger = logging.getLogger()
+    logger = getLogger()
     logger.setLevel(LOGGING_LEVEL)
     logger.addHandler(handler)

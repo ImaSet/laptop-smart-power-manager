@@ -10,10 +10,10 @@ needed to connect to the Smart Plug.
 
 # ---------------------------------------- IMPORTS ----------------------------------------
 
-from warnings import warn
 from typing import Optional
+from warnings import warn
 
-from keyring import get_password, set_password, delete_password
+from keyring import delete_password, get_password, set_password
 from keyring.errors import PasswordDeleteError
 
 from lspm.exceptions import CredentialsError

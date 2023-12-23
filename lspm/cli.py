@@ -9,15 +9,15 @@ Command Line Interface (CLI) of the Laptop Smart Power Manager (LSPM)
 
 # ---------------------------------------- IMPORTS ----------------------------------------
 
+import argparse
+import json
 import re
 import sys
-import json
-import argparse
 import warnings
 
-from time import sleep
 from pathlib import Path
 from shutil import rmtree
+from time import sleep
 
 from lspm import LaptopSmartPowerManager, PlugCredentials, SmartPlug
 from lspm.exceptions import CredentialsError

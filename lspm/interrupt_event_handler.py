@@ -10,15 +10,14 @@ the interruption of the Laptop Smart Power Manager.
 
 # ---------------------------------------- IMPORTS ----------------------------------------
 
-import platform
-
 from abc import ABC, abstractmethod
-from typing import Callable, Any
+from platform import system as platform_system
 from signal import signal, SIGINT, SIGTERM
+from typing import Any, Callable
 
 from win32api import GetModuleHandle
-from win32gui import WNDCLASS, RegisterClass, CreateWindowEx, PumpWaitingMessages
-from win32con import WM_QUERYENDSESSION, WS_EX_LEFT, CW_USEDEFAULT
+from win32con import CW_USEDEFAULT, WM_QUERYENDSESSION, WS_EX_LEFT
+from win32gui import CreateWindowEx, PumpWaitingMessages, RegisterClass, WNDCLASS
 
 from lspm.exceptions import UnsupportedSystemError
 
@@ -38,7 +37,7 @@ def set_interrupt_event_handler(exit_function: Callable, args: Any = None,
     :return: an InterruptEventHandler object specific to the system on which
              the Smart Power Manager is running.
     """
-    system_name = platform.system()
+    system_name = platform_system()
     if system_name == "Windows":
         return WindowsInterruptEventHandler(exit_function, args, kwargs)
     elif system_name == "Linux":
