@@ -9,9 +9,11 @@ This module includes the class dedicated to the interaction with TP-Link 'Tapo' 
 
 # ---------------------------------------- IMPORTS ----------------------------------------
 
+from typing import Any, Dict, List
+
 from PyP100.PyP100 import P100
 
-from .base import SmartPlug
+from .interface import SmartPlug
 
 
 # ----------------------------------------- CLASS -----------------------------------------
@@ -24,20 +26,24 @@ class TapoPlug(SmartPlug):
     """
 
     """
+    STATIC METHODS
+    """
+
+    @staticmethod
+    def supported_models() -> List[str]:
+        """
+        Returns a list of Smart Plug models supported by the current class.
+
+        :return: List of supported Smart Plug model names.
+        """
+        return ["Tapo P100", "Tapo P105", "Tapo P110"]
+
+    """
     PROPERTIES
     """
 
     @property
-    def name(self) -> str:
-        """
-        Returns the name of the Smart Plug.
-
-        :return: Device name.
-        """
-        return self._plug.getDeviceName()
-
-    @property
-    def information(self) -> dict:
+    def information(self) -> Dict[str, Any]:
         """
         Returns some metadata about the Smart Plug.
 
@@ -53,6 +59,15 @@ class TapoPlug(SmartPlug):
         :return: ``True`` if the device is switched on, ``False`` otherwise.
         """
         return self.information['result']["device_on"]
+
+    @property
+    def name(self) -> str:
+        """
+        Returns the name of the Smart Plug.
+
+        :return: Device name.
+        """
+        return self._plug.getDeviceName()
 
     """
     PROTECTED METHODS
@@ -75,14 +90,6 @@ class TapoPlug(SmartPlug):
     PUBLIC METHODS
     """
 
-    def turn_on(self) -> None:
-        """
-        Sends the turn-on request to the Smart Plug.
-
-        :return: None
-        """
-        self._plug.turnOn()
-
     def turn_off(self) -> None:
         """
         Sends the turn-off request to the Smart Plug.
@@ -90,3 +97,11 @@ class TapoPlug(SmartPlug):
         :return: None
         """
         self._plug.turnOff()
+
+    def turn_on(self) -> None:
+        """
+        Sends the turn-on request to the Smart Plug.
+
+        :return: None
+        """
+        self._plug.turnOn()
