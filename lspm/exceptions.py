@@ -43,6 +43,21 @@ class CredentialsError(LSPMException):
         self.error_msg = self.error_types.get(error_type)
 
 
+class PowerSupplyStatusCheckError(LSPMException):
+    """
+    The :class:`PowerSupplyStatusCheckError` is raised when there is any error related to
+    the retrieval of information about the power supply status of the computer.
+    """
+
+    error_types = {
+        "ac_power_cable": "Unable to know if the AC power cable is connected",
+        "battery_state": "Unable to get information about battery state"
+    }
+
+    def __init__(self, error_type: str) -> None:
+        self.error_msg = self.error_types.get(error_type)
+
+
 class SmartPlugConnectionError(LSPMException):
     """
     The :class:`SmartPlugConnectionError` is raised when the Smart Plug is not reachable.
@@ -60,21 +75,6 @@ class SmartPlugInteractionError(LSPMException):
 
     def __init__(self, action: str) -> None:
         self.error_msg = f"Unable to turn {action} the Smart Plug"
-
-
-class PowerSupplyStatusCheckError(LSPMException):
-    """
-    The :class:`PowerSupplyStatusCheckError` is raised when there is any error related to
-    the retrieval of information about the power supply status of the computer.
-    """
-
-    error_types = {
-        "ac_power_cable": "Unable to know if the AC power cable is connected",
-        "battery_state": "Unable to get information about battery state"
-    }
-
-    def __init__(self, error_type: str) -> None:
-        self.error_msg = self.error_types.get(error_type)
 
 
 class UnsupportedSmartPlugModel(LSPMException):

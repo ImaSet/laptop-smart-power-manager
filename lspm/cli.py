@@ -62,15 +62,6 @@ def lspm_command() -> None:
         args.action(args)
 
 
-def __is_ip_address(string: str) -> bool:
-    ipv4_address_pattern = r"^(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\." \
-                           r"(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\." \
-                           r"(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\." \
-                           r"(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$"
-    string = string if isinstance(string, str) else ""
-    return True if re.match(ipv4_address_pattern, string) else False
-
-
 def __get_smart_plug_config_data() -> dict:
     """
     Retrieves the configuration parameters of the Connected Socket.
@@ -105,48 +96,22 @@ def __get_smart_plug_config_data() -> dict:
     return {param: value for param, value in config_params.items() if value is not None}
 
 
-def _start() -> None:
+def __is_ip_address(string: str) -> bool:
+    ipv4_address_pattern = r"^(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\." \
+                           r"(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\." \
+                           r"(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\." \
+                           r"(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$"
+    string = string if isinstance(string, str) else ""
+    return True if re.match(ipv4_address_pattern, string) else False
+
+
+def _compile() -> None:
     """
-    Starts the Laptop Smart Power Manager.
+    Generates an executable of the Laptop Smart Power Manager.
 
     :return: None
     """
-    config = __get_smart_plug_config_data()
-    missing_config_data = False
-    if not config.get("address"):
-        print("Smart Plug IP Address not found. You must set it with "
-              "the following command: lspm config -a ADDRESS")
-        missing_config_data = True
-    if not config.get("username"):
-        print("Smart Plug IP associated username not found. You must set it with "
-              "the following command: lspm config -u USERNAME")
-        missing_config_data = True
-    if not config.get("password"):
-        print("Smart Plug IP associated password not found. You must set it with "
-              "the following command: lspm config -p PASSWORD")
-        missing_config_data = True
-    if missing_config_data:
-        return
-    # Get Smart Plug credentials
-    account = PlugCredentials()
-    # Connect to Smart Plug
-    smart_plug = SmartPlug("Tapo P100", config["address"], account)  # TODO choose model
-
-    # Initialize the Laptop Smart Power Manager
-    laptop_smart_power_manager = LaptopSmartPowerManager(smart_plug, handle_exceptions_in_main_thread=True)
-    # Start the Laptop Smart Power Manager
-    laptop_smart_power_manager.start()
-    print("Laptop Smart Power Manager started correctly")
-    print("To stop it, press CTRL + C (on macOS, Command + .)")
-    # This loop stops as soon as an interrupt-related event (CTRL+C, system shutdown) appears
-    while laptop_smart_power_manager.is_running:
-        sleep(.1)
-    # Wait until the Laptop Smart Power Manager terminates
-    laptop_smart_power_manager.join()
-    # If the Laptop Smart Power Manager thread raised an exception, raise it here in the main thread
-    if laptop_smart_power_manager.exception:
-        raise laptop_smart_power_manager.exception
-    print("Laptop Smart Power Manager stopped successfully")
+    print("Work in progress...")  # TODO
 
 
 def _configure_smart_plug(args: argparse.Namespace) -> None:
@@ -223,10 +188,45 @@ def _configure_smart_plug(args: argparse.Namespace) -> None:
     warnings.resetwarnings()
 
 
-def _compile() -> None:
+def _start() -> None:
     """
-    Generates an executable of the Laptop Smart Power Manager.
+    Starts the Laptop Smart Power Manager.
 
     :return: None
     """
-    print("Work in progress...")  # TODO
+    config = __get_smart_plug_config_data()
+    missing_config_data = False
+    if not config.get("address"):
+        print("Smart Plug IP Address not found. You must set it with "
+              "the following command: lspm config -a ADDRESS")
+        missing_config_data = True
+    if not config.get("username"):
+        print("Smart Plug IP associated username not found. You must set it with "
+              "the following command: lspm config -u USERNAME")
+        missing_config_data = True
+    if not config.get("password"):
+        print("Smart Plug IP associated password not found. You must set it with "
+              "the following command: lspm config -p PASSWORD")
+        missing_config_data = True
+    if missing_config_data:
+        return
+    # Get Smart Plug credentials
+    account = PlugCredentials()
+    # Connect to Smart Plug
+    smart_plug = SmartPlug("Tapo P100", config["address"], account)  # TODO choose model
+
+    # Initialize the Laptop Smart Power Manager
+    laptop_smart_power_manager = LaptopSmartPowerManager(smart_plug, handle_exceptions_in_main_thread=True)
+    # Start the Laptop Smart Power Manager
+    laptop_smart_power_manager.start()
+    print("Laptop Smart Power Manager started correctly")
+    print("To stop it, press CTRL + C (on macOS, Command + .)")
+    # This loop stops as soon as an interrupt-related event (CTRL+C, system shutdown) appears
+    while laptop_smart_power_manager.is_running:
+        sleep(.1)
+    # Wait until the Laptop Smart Power Manager terminates
+    laptop_smart_power_manager.join()
+    # If the Laptop Smart Power Manager thread raised an exception, raise it here in the main thread
+    if laptop_smart_power_manager.exception:
+        raise laptop_smart_power_manager.exception
+    print("Laptop Smart Power Manager stopped successfully")
