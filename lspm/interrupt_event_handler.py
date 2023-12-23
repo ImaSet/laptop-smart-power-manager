@@ -56,7 +56,7 @@ class InterruptEventHandler(ABC):
     The :class:`InterruptEventHandler` abstracts out some common functionality
     that is used across all Interrupt Event Handlers.
 
-    :param Callable exit_function: function executed when the Windows shutdown event is caught.
+    :param Callable exit_function: function executed when a system shutdown event is caught.
     :param Any args: non-keyword arguments of ``exit_function``.
     :param Any kwargs: keyword arguments of ``exit_function``.
     """
