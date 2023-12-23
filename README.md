@@ -36,9 +36,9 @@ must be connected to the same local network:
 
 The operating principle is quite simple:
 
-- if the battery level drops below 20%, **LSPM** tells the 
+- if the battery level drops below `20%`, **LSPM** tells the 
 _Smart Plug_ to turn on. The laptop then starts charging.
-- if the battery level reaches 100%, **LSPM** tells the 
+- if the battery level reaches `80%`, **LSPM** tells the 
 _Smart Plug_ to turn off. The laptop then stops charging.
 
 ## Table of Contents
