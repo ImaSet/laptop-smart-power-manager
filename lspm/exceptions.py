@@ -7,6 +7,10 @@ Exceptions
 This module includes a set of classes to handle exceptions specific to the ``lspm`` package.
 """
 
+# ---------------------------------------- IMPORTS ----------------------------------------
+
+from typing import List
+
 
 # ---------------------------------------- CLASSES ----------------------------------------
 
@@ -71,6 +75,16 @@ class PowerSupplyStatusCheckError(LSPMException):
 
     def __init__(self, error_type: str) -> None:
         self.error_msg = self.error_types.get(error_type)
+
+
+class UnsupportedSmartPlugModel(LSPMException):
+    """
+    The :class:`UnsupportedSmartPlugModel` is raised when the provided Smart Plug model
+    is not supported by the currently implemented SmartPlug classes.
+    """
+
+    def __init__(self, model: str, supported_models: List[str]) -> None:
+        self.error_msg = f"'{model}'.\nCurrently supported models are: {', '.join(supported_models)}"
 
 
 class UnsupportedSystemError(LSPMException):
