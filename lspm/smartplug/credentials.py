@@ -84,7 +84,7 @@ class PlugCredentials:
         try:
             delete_password(self.__app_id, self.__app_key)
         except PasswordDeleteError:
-            raise CredentialsError("no_username")
+            raise CredentialsError("no_username") from None
 
     @property
     def password(self) -> Optional[str]:
@@ -124,4 +124,4 @@ class PlugCredentials:
         try:
             delete_password(self.__app_id, self.username)
         except PasswordDeleteError:
-            raise CredentialsError("no_password")
+            raise CredentialsError("no_password") from None
