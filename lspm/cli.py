@@ -19,7 +19,7 @@ from time import sleep
 from pathlib import Path
 from shutil import rmtree
 
-from lspm import LaptopSmartPowerManager, PlugCredentials, TapoPlug
+from lspm import LaptopSmartPowerManager, PlugCredentials, SmartPlug
 from lspm.exceptions import CredentialsError
 
 
@@ -130,7 +130,7 @@ def _start() -> None:
     # Get Smart Plug credentials
     account = PlugCredentials()
     # Connect to Smart Plug
-    smart_plug = TapoPlug(config["address"], account)
+    smart_plug = SmartPlug("Tapo P100", config["address"], account)  # TODO choose model
 
     # Initialize the Laptop Smart Power Manager
     laptop_smart_power_manager = LaptopSmartPowerManager(smart_plug, handle_exceptions_in_main_thread=True)
@@ -193,7 +193,6 @@ def _configure_smart_plug(args: argparse.Namespace) -> None:
         rmtree(lspm_config_dir)
         try:
             warnings.simplefilter('ignore')
-            del account.password
             del account.username
         except CredentialsError:
             pass
@@ -216,8 +215,10 @@ def _configure_smart_plug(args: argparse.Namespace) -> None:
             f.truncate()
     warnings.simplefilter('ignore')
     if username is not None:
+        print("username", username)
         account.username = username
     if password is not None:
+        print("username", username)
         account.password = password
     warnings.resetwarnings()
 
