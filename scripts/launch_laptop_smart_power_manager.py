@@ -9,7 +9,7 @@ This script shows how to launch the Laptop Smart Power Manager.
 
 from time import sleep
 
-from lspm import PlugCredentials, TapoPlug, LaptopSmartPowerManager
+from lspm import LaptopSmartPowerManager, PlugCredentials, SmartPlug
 
 
 # Set Smart Plug IP Address
@@ -18,7 +18,7 @@ address = "192.168.X.X"
 account = PlugCredentials()
 
 # Connect to Smart Plug
-smart_plug = TapoPlug(address, account)
+smart_plug = SmartPlug("Tapo P100", address, account)
 
 # Initialize the Laptop Smart Power Manager
 laptop_smart_power_manager = LaptopSmartPowerManager(smart_plug, handle_exceptions_in_main_thread=True)
