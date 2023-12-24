@@ -79,7 +79,7 @@ class TapoPlug(SmartPlug):
 
         :return: Underlying object associated to the Smart Plug.
         """
-        plug = P100(self._address, self._account.username, self._account.password)
+        plug: P100 = P100(self._address, self._account.username, self._account.password)
         # Create the cookie required for further methods
         plug.handshake()
         # Send credentials to the plug then create AES Key and IV for further methods

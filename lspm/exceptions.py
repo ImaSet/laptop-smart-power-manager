@@ -9,7 +9,7 @@ This module includes a set of classes to handle exceptions specific to the ``lsp
 
 # ---------------------------------------- IMPORTS ----------------------------------------
 
-from typing import List
+from typing import Dict, List
 
 
 # ---------------------------------------- CLASSES ----------------------------------------
@@ -21,7 +21,7 @@ class LSPMException(Exception):
     """
 
     def __init__(self) -> None:
-        self.error_msg = "LaptopSmartPowerManager Exception"
+        self.error_msg: str = "LaptopSmartPowerManager Exception"
 
     def __str__(self) -> str:
         return self.error_msg
@@ -33,14 +33,14 @@ class CredentialsError(LSPMException):
     the credentials associated to the Smart Plug.
     """
 
-    error_types = {
+    error_types: Dict[str, str] = {
         "no_username": "No username to delete",
         "no_password": "No password to delete",
         "password_set_prematurely": "The username must be set before the password"
     }
 
     def __init__(self, error_type: str) -> None:
-        self.error_msg = self.error_types.get(error_type)
+        self.error_msg: str = self.error_types.get(error_type)
 
 
 class PowerSupplyStatusCheckError(LSPMException):
@@ -49,13 +49,13 @@ class PowerSupplyStatusCheckError(LSPMException):
     the retrieval of information about the power supply status of the computer.
     """
 
-    error_types = {
+    error_types: Dict[str, str] = {
         "ac_power_cable": "Unable to know if the AC power cable is connected",
         "battery_state": "Unable to get information about battery state"
     }
 
     def __init__(self, error_type: str) -> None:
-        self.error_msg = self.error_types.get(error_type)
+        self.error_msg: str = self.error_types.get(error_type)
 
 
 class SmartPlugConnectionError(LSPMException):
@@ -64,7 +64,7 @@ class SmartPlugConnectionError(LSPMException):
     """
 
     def __init__(self, error_msg: str) -> None:
-        self.error_msg = error_msg
+        self.error_msg: str = error_msg
 
 
 class SmartPlugInteractionError(LSPMException):
@@ -74,7 +74,7 @@ class SmartPlugInteractionError(LSPMException):
     """
 
     def __init__(self, action: str) -> None:
-        self.error_msg = f"Unable to turn {action} the Smart Plug"
+        self.error_msg: str = f"Unable to turn {action} the Smart Plug"
 
 
 class UnsupportedSmartPlugModel(LSPMException):
@@ -84,7 +84,7 @@ class UnsupportedSmartPlugModel(LSPMException):
     """
 
     def __init__(self, model: str, supported_models: List[str]) -> None:
-        self.error_msg = f"'{model}'.\nCurrently supported models are: {', '.join(supported_models)}"
+        self.error_msg: str = f"'{model}'.\nCurrently supported models are: {', '.join(supported_models)}"
 
 
 class UnsupportedSystemError(LSPMException):
@@ -94,5 +94,5 @@ class UnsupportedSystemError(LSPMException):
     """
 
     def __init__(self, system_name: str) -> None:
-        self.error_msg = f"'{system_name}' system is not supported. " \
-                         f"Only Windows, Linux, and macOS are currently supported"
+        self.error_msg: str = (f"'{system_name}' system is not supported. "
+                               f"Only Windows, Linux, and macOS are currently supported")

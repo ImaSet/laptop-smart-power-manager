@@ -9,15 +9,16 @@ Command Line Interface (CLI) of the Laptop Smart Power Manager (LSPM)
 
 # ---------------------------------------- IMPORTS ----------------------------------------
 
-import argparse
 import json
 import re
 import sys
 import warnings
 
+from argparse import ArgumentParser, Namespace
 from pathlib import Path
 from shutil import rmtree
 from time import sleep
+from typing import Any, Dict, Optional
 
 from lspm import LaptopSmartPowerManager, PlugCredentials, SmartPlug
 from lspm.exceptions import CredentialsError
@@ -34,15 +35,15 @@ def lspm_command() -> None:
 
     :return: None
     """
-    global_parser = argparse.ArgumentParser(prog="lspm", description="Command Line Interface for LSPM, the "
-                                                                     "Laptop Smart Power Manager.")
+    global_parser: ArgumentParser = ArgumentParser(prog="lspm", description="Command Line Interface for LSPM, "
+                                                                            "the Laptop Smart Power Manager.")
     subparsers = global_parser.add_subparsers(title="Actions", metavar="<action>")
 
-    start_info = "Start the Laptop Smart Power Manager."
+    start_info: str = "Start the Laptop Smart Power Manager."
     start_parser = subparsers.add_parser("start", help=start_info, description=start_info)
     start_parser.set_defaults(action=_start)
 
-    config_info = "Launch the Smart Plug configuration interface."
+    config_info: str = "Launch the Smart Plug configuration interface."
     config_parser = subparsers.add_parser("config", help=config_info, description=config_info)
     config_parser.add_argument("-a", "--address", help="Set or update the Smart Plug IP address.")
     config_parser.add_argument("-u", "--username", help="Set or update the username associated to the Smart Plug.")
@@ -51,18 +52,18 @@ def lspm_command() -> None:
                                default=None)
     config_parser.set_defaults(action=_configure_smart_plug)
 
-    compile_info = "Create an executable version of LSPM."
+    compile_info: str = "Create an executable version of LSPM."
     compile_parser = subparsers.add_parser("compile", help=compile_info, description=compile_info)
     compile_parser.set_defaults(action=_compile)
 
-    args = global_parser.parse_args(args=None if sys.argv[1:] else ['-h'])
+    args: Namespace = global_parser.parse_args(args=None if sys.argv[1:] else ['-h'])
     if args.action.__name__ in ['_start', '_compile']:
         args.action()
     else:
         args.action(args)
 
 
-def __get_smart_plug_config_data() -> dict:
+def __get_smart_plug_config_data() -> Dict[str, Any]:
     """
     Retrieves the configuration parameters of the Connected Socket.
 
@@ -73,23 +74,24 @@ def __get_smart_plug_config_data() -> dict:
              and correctly stored on the current machine.
     """
     # Create Smart Plug config file if it doesn't exist
-    lspm_config_dir = Path(Path.home(), '.lspm')
-    smart_plug_config = Path(lspm_config_dir, 'smart_plug')
+    lspm_config_dir: Path = Path(Path.home(), '.lspm')
+    smart_plug_config: Path = Path(lspm_config_dir, 'smart_plug')
     if not lspm_config_dir.exists():
         lspm_config_dir.mkdir()
     if not smart_plug_config.exists():
         smart_plug_config.touch()
     # Get Smart Plug config file data
     with open(smart_plug_config, 'r') as f:
+        config_data: Dict[str, Any] = dict()
         try:
             config_data = json.load(f)
         except json.JSONDecodeError:
-            config_data = dict()
+            pass
     # Set Smart Plug config parameters
-    config_params = dict()
+    config_params: Dict[str, Any] = dict()
     config_params["address"] = config_data.get("address") if __is_ip_address(config_data.get("address")) else None
     warnings.simplefilter('ignore')
-    account = PlugCredentials()
+    account: PlugCredentials = PlugCredentials()
     config_params["username"] = account.username
     config_params["password"] = account.password
     warnings.resetwarnings()
@@ -97,11 +99,11 @@ def __get_smart_plug_config_data() -> dict:
 
 
 def __is_ip_address(string: str) -> bool:
-    ipv4_address_pattern = r"^(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\." \
-                           r"(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\." \
-                           r"(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\." \
-                           r"(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$"
-    string = string if isinstance(string, str) else ""
+    ipv4_address_pattern: str = (r"^(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\."
+                                 r"(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\."
+                                 r"(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\."
+                                 r"(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$")
+    string: str = string if isinstance(string, str) else ""
     return True if re.match(ipv4_address_pattern, string) else False
 
 
@@ -114,7 +116,7 @@ def _compile() -> None:
     print("Work in progress...")  # TODO
 
 
-def _configure_smart_plug(args: argparse.Namespace) -> None:
+def _configure_smart_plug(args: Namespace) -> None:
     """
     Saves settings for connecting to the Smart Plug.
 
@@ -122,25 +124,28 @@ def _configure_smart_plug(args: argparse.Namespace) -> None:
     Other parameters such as the IP address of the Smart Plug are saved
     in a file located at $HOME$/.lspm/smart_plug
 
-    :param argparse.Namespace args: object holding attributes entered by the user.
+    :param Namespace args: object holding attributes entered by the user.
 
     :return: None
     """
-    account = PlugCredentials()
+    account: PlugCredentials = PlugCredentials()
+    address: Optional[str]
+    username: Optional[str]
+    password: Optional[str]
     address, username, password = args.address, args.username, args.password
-    config = __get_smart_plug_config_data()
+    config: Dict[str, Any] = __get_smart_plug_config_data()
     if all(arg is None for arg in [args.address, args.username, args.password, args.clear]):
         try:
             if any(stored_info is not None for stored_info in
                    [config.get('address'), config.get('username'), config.get('password')]):
-                update_info = input("Found existing configuration. This operation will erase the "
-                                    "previous configuration. \nDo you wish to continue? [y/n] ")
+                update_info: str = input("Found existing configuration. This operation will erase the "
+                                         "previous configuration. \nDo you wish to continue? [y/n] ")
                 if update_info.lower() not in ('y', 'yes'):
                     print("Operation aborted.")
                     return
-            attempt = 0
+            attempt: int = 0
             while attempt < 3:
-                address = input("Enter the Smart Plug IP Address: ")
+                address: str = input("Enter the Smart Plug IP Address: ")
                 attempt += 1
                 if __is_ip_address(address):
                     break
@@ -149,12 +154,12 @@ def _configure_smart_plug(args: argparse.Namespace) -> None:
                 else:
                     print("Invalid IPv4 address, operation aborted.")
                     return
-            username = input("Enter a new username: ")
-            password = input("Enter a new password: ")
+            username: str = input("Enter a new username: ")
+            password: str = input("Enter a new password: ")
         except KeyboardInterrupt:
             print("\nOperation aborted.")
     elif args.clear:
-        lspm_config_dir = Path(Path.home(), '.lspm')
+        lspm_config_dir: Path = Path(Path.home(), '.lspm')
         rmtree(lspm_config_dir)
         try:
             warnings.simplefilter('ignore')
@@ -168,12 +173,13 @@ def _configure_smart_plug(args: argparse.Namespace) -> None:
         if not __is_ip_address(address):
             print("Invalid IPv4 address, operation aborted.")
             return
-        smart_plug_config = Path(Path.home(), '.lspm', 'smart_plug')
+        smart_plug_config: Path = Path(Path.home(), '.lspm', 'smart_plug')
         with open(smart_plug_config, 'r+') as f:
+            config_data: Dict[str, Any] = dict()
             try:
                 config_data = json.load(f)
             except json.JSONDecodeError:
-                config_data = dict()
+                pass
             config_data.update(address=address)
             f.seek(0)
             json.dump(config_data, f)
@@ -194,8 +200,8 @@ def _start() -> None:
 
     :return: None
     """
-    config = __get_smart_plug_config_data()
-    missing_config_data = False
+    config: Dict[str, Any] = __get_smart_plug_config_data()
+    missing_config_data: bool = False
     if not config.get("address"):
         print("Smart Plug IP Address not found. You must set it with "
               "the following command: lspm config -a ADDRESS")
@@ -211,12 +217,14 @@ def _start() -> None:
     if missing_config_data:
         return
     # Get Smart Plug credentials
-    account = PlugCredentials()
+    account: PlugCredentials = PlugCredentials()
     # Connect to Smart Plug
-    smart_plug = SmartPlug("Tapo P100", config["address"], account)  # TODO choose model
+    smart_plug: SmartPlug = SmartPlug("Tapo P100", config["address"], account)  # TODO get model from config
 
     # Initialize the Laptop Smart Power Manager
-    laptop_smart_power_manager = LaptopSmartPowerManager(smart_plug, handle_exceptions_in_main_thread=True)
+    laptop_smart_power_manager: LaptopSmartPowerManager = (
+        LaptopSmartPowerManager(smart_plug, handle_exceptions_in_main_thread=True)
+    )
     # Start the Laptop Smart Power Manager
     laptop_smart_power_manager.start()
     print("Laptop Smart Power Manager started correctly")

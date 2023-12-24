@@ -28,8 +28,8 @@ class PlugCredentials:
     """
 
     def __init__(self) -> None:
-        self.__app_id = "LaptopSmartPowerManager"
-        self.__app_key = "PlugCredentials"
+        self.__app_id: str = "LaptopSmartPowerManager"
+        self.__app_key: str = "PlugCredentials"
 
     def __repr__(self) -> str:
         return "<PlugCredentials>"
@@ -42,7 +42,7 @@ class PlugCredentials:
 
         :return: Username associated with the Smart Plug or None.
         """
-        username = get_password(self.__app_id, self.__app_key)
+        username: Optional[str] = get_password(self.__app_id, self.__app_key)
         if username is None:
             warn("No credentials found for the Smart Plug")
         return username
@@ -56,13 +56,13 @@ class PlugCredentials:
 
         :return: None
         """
-        old_username = get_password(self.__app_id, self.__app_key)
+        old_username: Optional[str] = get_password(self.__app_id, self.__app_key)
         if old_username is None:
             # Set the username
             set_password(self.__app_id, self.__app_key, value)
         else:
             # Retrieve the password value associated to the old username
-            associated_password = get_password(self.__app_id, old_username)
+            associated_password: Optional[str] = get_password(self.__app_id, old_username)
             if associated_password is not None:
                 # Delete the registered password associated to the old username
                 del self.password
@@ -94,8 +94,8 @@ class PlugCredentials:
 
         :return: Password associated with the Smart Plug or None.
         """
-        username = self.username
-        password = get_password(self.__app_id, username)
+        username: Optional[str] = self.username
+        password: Optional[str] = get_password(self.__app_id, username)
         if username is not None and password is None:
             warn("No password found for the Smart Plug")
         return password

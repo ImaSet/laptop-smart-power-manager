@@ -10,15 +10,15 @@ the computer and manage its power supply.
 
 # ---------------------------------------- IMPORTS ----------------------------------------
 
-from logging import getLogger
+from logging import getLogger, Logger
 from threading import Event, Thread, Timer
 from time import sleep
-from typing import Tuple
+from typing import Optional, Tuple
 
 from psutil import sensors_battery
 
 from lspm.exceptions import PowerSupplyStatusCheckError, SmartPlugConnectionError, SmartPlugInteractionError
-from lspm.interrupt_event_handler import set_interrupt_event_handler
+from lspm.interrupt_event_handler import InterruptEventHandler, set_interrupt_event_handler
 from lspm.logger import set_logging
 from lspm.parameters import BATTERY_HIGH, BATTERY_LOW, REFRESH_TIME, STATE_CHANGE_TIMEOUT
 from lspm.smartplug import SmartPlug
@@ -41,19 +41,19 @@ class LaptopSmartPowerManager(Thread):
     def __init__(self, smart_plug: SmartPlug, handle_exceptions_in_main_thread: bool = False) -> None:
         Thread.__init__(self)
         set_logging()
-        self.__logger = getLogger("lspm")
+        self.__logger: Logger = getLogger("lspm")
         self.__logger.info("Initializing the Laptop Smart Power Manager")
-        self.exception = None
-        self.__handle_exceptions_in_main_thread = handle_exceptions_in_main_thread
-        self.__finished = Event()
-        self.__connection_lost = False
-        self.__smart_plug = smart_plug
+        self.exception: Optional[Exception] = None
+        self.__handle_exceptions_in_main_thread: bool = handle_exceptions_in_main_thread
+        self.__finished: Event = Event()
+        self.__connection_lost: bool = False
+        self.__smart_plug: SmartPlug = smart_plug
         self.__check_connection_to_smart_plug()
         self.__smart_plug.turn_off()
         self.__logger.debug("Sent turn-off request to the Smart Plug")
         self.__check_smart_plug_state("off")
         self.__manage_power_supply()
-        self.__interrupt_event_handler = set_interrupt_event_handler(exit_function=self.stop)
+        self.__interrupt_event_handler: InterruptEventHandler = set_interrupt_event_handler(exit_function=self.stop)
 
     """
     PROPERTIES
@@ -108,9 +108,9 @@ class LaptopSmartPowerManager(Thread):
             self.stop()
             raise SmartPlugInteractionError(state)
 
-        state_changed = Event()
-        expected_state = True if state.lower() == "on" else False
-        timeout = Timer(STATE_CHANGE_TIMEOUT, interaction_lost)
+        state_changed: Event = Event()
+        expected_state: bool = True if state.lower() == "on" else False
+        timeout: Timer = Timer(STATE_CHANGE_TIMEOUT, interaction_lost)
         timeout.start()
         while not state_changed.is_set():
             if self.__smart_plug.is_on is expected_state:
@@ -143,6 +143,8 @@ class LaptopSmartPowerManager(Thread):
 
         :return: None
         """
+        battery_level: int
+        power_plugged: bool
         battery_level, power_plugged = self.__get_battery_state()
         self.__logger.debug(f"Battery level: {battery_level}% - Power plugged: {'Yes' if power_plugged else 'No'}")
         if not power_plugged and battery_level < BATTERY_LOW:

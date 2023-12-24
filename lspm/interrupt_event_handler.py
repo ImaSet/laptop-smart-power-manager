@@ -13,7 +13,7 @@ the interruption of the Laptop Smart Power Manager.
 from abc import ABC, abstractmethod
 from platform import system as platform_system
 from signal import signal, SIGINT, SIGTERM
-from typing import Any, Callable
+from typing import Any, Callable, Dict, Tuple
 
 from win32api import GetModuleHandle
 from win32con import CW_USEDEFAULT, WM_QUERYENDSESSION, WS_EX_LEFT
@@ -24,8 +24,7 @@ from lspm.exceptions import UnsupportedSystemError
 
 # ---------------------------------------- METHODS ----------------------------------------
 
-def set_interrupt_event_handler(exit_function: Callable, args: Any = None,
-                                kwargs: Any = None) -> 'InterruptEventHandler':
+def set_interrupt_event_handler(exit_function: Callable, *args: Any, **kwargs: Any) -> 'InterruptEventHandler':
     """
     Initializes the appropriate InterruptEventHandler depending on the system (Windows,
     Linux or macOS) on which the Smart Power Manager is running.
@@ -37,13 +36,13 @@ def set_interrupt_event_handler(exit_function: Callable, args: Any = None,
     :return: an InterruptEventHandler object specific to the system on which
              the Smart Power Manager is running.
     """
-    system_name = platform_system()
+    system_name: str = platform_system()
     if system_name == "Windows":
-        return WindowsInterruptEventHandler(exit_function, args, kwargs)
+        return WindowsInterruptEventHandler(exit_function, *args, **kwargs)
     elif system_name == "Linux":
-        return LinuxInterruptEventHandler(exit_function, args, kwargs)
+        return LinuxInterruptEventHandler(exit_function, *args, **kwargs)
     elif system_name == "Darwin":
-        return MacOSInterruptEventHandler(exit_function, args, kwargs)
+        return MacOSInterruptEventHandler(exit_function, *args, **kwargs)
     else:
         raise UnsupportedSystemError(system_name)
 
@@ -60,10 +59,10 @@ class InterruptEventHandler(ABC):
     :param Any kwargs: keyword arguments of ``exit_function``.
     """
 
-    def __init__(self, exit_function: Callable, args: Any = None, kwargs: Any = None) -> None:
-        self._exit_function = exit_function
-        self._args = args if args is not None else []
-        self._kwargs = kwargs if kwargs is not None else {}
+    def __init__(self, exit_function: Callable, *args: Any, **kwargs: Any) -> None:
+        self._exit_function: Callable = exit_function
+        self._args: Tuple[Any] = args
+        self._kwargs: Dict[str, Any] = kwargs
         self._set_keyboard_interrupt_event_handler()
         self._set_shutdown_event_handler()
 

@@ -11,7 +11,7 @@ from lspm import PlugCredentials
 
 
 # Initialize the object holding the Smart Plug credentials
-account = PlugCredentials()
+account: PlugCredentials = PlugCredentials()
 
 # Set the username and password
 account.username = "YOUR_USERNAME"
